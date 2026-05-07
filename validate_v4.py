@@ -41,6 +41,7 @@ funcs = [
     'getFiltered', 'uniqueLeads', 'pipelineLeads', 'renderAll',
     'renderOverview', 'renderPerf', 'renderSteps', 'renderCopy',
     'renderAB', 'renderTrends', 'renderEmail', 'renderRaw',
+    'renderFunnel', 'setFunnelChannel',
     'switchTab', 'setCopyFilter'
 ]
 missing = []
@@ -52,7 +53,7 @@ for fn in funcs:
         print(f"  {fn}() MISSING!")
 
 # Tab divs
-tabs = ['perf', 'steps', 'copy', 'ab', 'trends', 'email', 'raw']
+tabs = ['perf', 'steps', 'funnel', 'copy', 'ab', 'trends', 'email', 'raw']
 for tab in tabs:
     if f'id="tab-{tab}"' in html:
         print(f"  tab-{tab} div ✓")
@@ -63,6 +64,7 @@ for tab in tabs:
 # Element IDs
 ids = [
     'overviewStats', 'overviewInsights', 'perfBody', 'stepTable',
+    'funnelVis', 'funnelMeta', 'funnelChannelToggle',
     'copySenderFilter', 'copyBody', 'abSummary', 'abTable',
     'weeklyVolume', 'weeklyRate', 'emailStats', 'emailInsights',
     'emailBody', 'rawList', 'maturitySlider', 'maturityVal',

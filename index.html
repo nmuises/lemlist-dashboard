@@ -119,6 +119,21 @@ footer { text-align:center; padding:40px 0; color:var(--muted); font-size:0.8rem
 .ch-toggle-btn:first-child { border-radius:6px 0 0 6px; }
 .ch-toggle-btn:last-child { border-radius:0 6px 6px 0; }
 .ch-toggle-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* ── Funnel ── */
+.funnel-wrap { max-width:750px; margin:0 auto; padding:16px 0; }
+.funnel-stage { margin:0 0; text-align:center; }
+.funnel-bar { height:46px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:0.9rem; transition:all 0.3s; margin:0 auto; min-width:120px; }
+.funnel-bar-total { background:var(--accent); }
+.funnel-bar-step0 { background:linear-gradient(135deg, #7c3aed, #8b5cf6); }
+.funnel-bar-step1 { background:linear-gradient(135deg, #2563eb, #3b82f6); }
+.funnel-bar-step2 { background:linear-gradient(135deg, #0d9488, #14b8a6); }
+.funnel-bar-step3 { background:linear-gradient(135deg, #b45309, #f59e0b); }
+.funnel-bar-goal { background:linear-gradient(135deg, #16a34a, #22c55e); }
+.funnel-arrow { text-align:center; color:var(--muted); font-size:0.85rem; padding:4px 0; }
+.funnel-sub { font-size:0.68rem; opacity:0.8; font-weight:400; margin-left:8px; }
+.funnel-drop { font-size:0.65rem; color:var(--danger); display:block; margin-top:1px; }
+.funnel-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:20px; }
 </style>
 </head>
 <body>
@@ -167,6 +182,7 @@ footer { text-align:center; padding:40px 0; color:var(--muted); font-size:0.8rem
 <div class="tabs">
   <div class="tab active" onclick="switchTab('perf')">Performance</div>
   <div class="tab" onclick="switchTab('steps')">By Step</div>
+  <div class="tab" onclick="switchTab('funnel')">Funnel</div>
   <div class="tab" onclick="switchTab('copy')">Copy Analysis</div>
   <div class="tab" onclick="switchTab('ab')">A/B Tests</div>
   <div class="tab" onclick="switchTab('trends')">Trends</div>
@@ -178,7 +194,12 @@ footer { text-align:center; padding:40px 0; color:var(--muted); font-size:0.8rem
   <div class="card">
     <h2>Campaign Performance by Channel <span class="badge badge-info">Filtered</span></h2>
     <div class="filter-row">
-      <div class="filter-dropdown" id="perf-type">
+      <span style="font-size:0.78rem;color:var(--muted);margin-right:4px;">Group by:</span>
+      <div class="channel-toggle" id="perfGroupToggle">
+        <button class="ch-toggle-btn active" onclick="setPerfGroupBy('campaign')">Campaign</button>
+        <button class="ch-toggle-btn" onclick="setPerfGroupBy('sender')">Sender</button>
+      </div>
+      <div class="filter-dropdown" id="perf-type" style="margin-left:12px;">
         <button class="dd-btn" onclick="ddToggle('perf-type')">Type: <span id="perf-type-label">All</span> <span class="dd-arrow">▾</span></button>
         <div class="dd-panel" id="perf-type-panel"></div>
       </div>
@@ -219,7 +240,12 @@ footer { text-align:center; padding:40px 0; color:var(--muted); font-size:0.8rem
       <span style="border-left:3px solid rgba(148,163,184,0.45);padding-left:6px;">Combined</span>
     </div>
     <div class="filter-row">
-      <div class="channel-toggle" id="stepChannelToggle">
+      <span style="font-size:0.78rem;color:var(--muted);margin-right:4px;">Group by:</span>
+      <div class="channel-toggle" id="stepGroupToggle">
+        <button class="ch-toggle-btn active" onclick="setStepGroupBy('campaign')">Campaign</button>
+        <button class="ch-toggle-btn" onclick="setStepGroupBy('sender')">Sender</button>
+      </div>
+      <div class="channel-toggle" id="stepChannelToggle" style="margin-left:12px;">
         <button class="ch-toggle-btn active" onclick="setStepChannel('both')">LinkedIn + Email</button>
         <button class="ch-toggle-btn" onclick="setStepChannel('linkedin')">LinkedIn Only</button>
         <button class="ch-toggle-btn" onclick="setStepChannel('email')">Email Only</button>
@@ -230,6 +256,33 @@ footer { text-align:center; padding:40px 0; color:var(--muted); font-size:0.8rem
       </div>
     </div>
     <div class="scroll-h"><div id="stepTable"></div></div>
+  </div>
+</div>
+
+<div class="tab-content" id="tab-funnel">
+  <div class="funnel-card">
+    <h2>Conversion Funnel <span class="badge badge-info">Step by Step</span></h2>
+    <div class="filter-row">
+      <div class="channel-toggle" id="funnelChannelToggle">
+        <button class="ch-toggle-btn active" onclick="setFunnelChannel('both')">LinkedIn + Email</button>
+        <button class="ch-toggle-btn" onclick="setFunnelChannel('linkedin')">LinkedIn Only</button>
+        <button class="ch-toggle-btn" onclick="setFunnelChannel('email')">Email Only</button>
+      </div>
+      <div class="filter-dropdown" id="funnel-campaign" style="margin-left:12px;">
+        <button class="dd-btn" onclick="ddToggle('funnel-campaign')">Campaign: <span id="funnel-campaign-label">All</span> <span class="dd-arrow">▾</span></button>
+        <div class="dd-panel" id="funnel-campaign-panel"></div>
+      </div>
+      <div class="filter-dropdown" id="funnel-type">
+        <button class="dd-btn" onclick="ddToggle('funnel-type')">Type: <span id="funnel-type-label">All</span> <span class="dd-arrow">▾</span></button>
+        <div class="dd-panel" id="funnel-type-panel"></div>
+      </div>
+      <div class="filter-dropdown" id="funnel-sender">
+        <button class="dd-btn" onclick="ddToggle('funnel-sender')">Sender: <span id="funnel-sender-label">All</span> <span class="dd-arrow">▾</span></button>
+        <div class="dd-panel" id="funnel-sender-panel"></div>
+      </div>
+    </div>
+    <div class="funnel-wrap" id="funnelVis"></div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-top:12px;text-align:center;" id="funnelMeta"></div>
   </div>
 </div>
 
@@ -314,8 +367,12 @@ var stepChannel = 'both'; // 'both', 'linkedin', 'email'
 var stepExcluded = {};  // {campaign: {value:true}} — empty = all
 var stepSortCol = '';
 var stepSortDir = 0;
+var perfGroupBy = 'campaign'; // 'campaign' or 'sender'
+var stepGroupBy = 'campaign'; // 'campaign' or 'sender'
 perfExcluded.type = {}; perfExcluded.sender = {}; perfExcluded.campaign = {};
 stepExcluded.campaign = {};
+var funnelChannel = 'both'; // 'both', 'linkedin', 'email'
+funnelExcluded = {}; funnelExcluded.campaign = {}; funnelExcluded.type = {}; funnelExcluded.sender = {};
 
 function parseDate(s) {
   if (!s) return null;
@@ -549,6 +606,22 @@ function perfExtract(d, col) {
   }
 }
 
+function senderExtract(d, col) {
+  switch (col) {
+    case 'name': return d.name;
+    case 'type': return Object.keys(d.types).sort().join(',');
+    case 'sender': return d.name;
+    case 'leads': return d.leads;
+    case 'pipeline': return d.pl;
+    case 'invites': return d.invites;
+    case 'dms': return d.sent;
+    case 'emails': return d.emails;
+    case 'interested': return d.interested;
+    case 'last': return d.lastAct || '';
+    default: return 0;
+  }
+}
+
 // ── PERFORMANCE TAB FILTER ──
 function perfAccepts(d) {
   if (ddIsFiltered('perf-type') && !ddMatch('perf-type', d.campaign.type)) return false;
@@ -564,6 +637,24 @@ function setStepChannel(ch) {
   btns.forEach(function(b, i) {
     var vals = ['both', 'linkedin', 'email'];
     b.classList.toggle('active', vals[i] === ch);
+  });
+  renderSteps();
+}
+
+function setPerfGroupBy(mode) {
+  perfGroupBy = mode;
+  var btns = document.querySelectorAll('#perfGroupToggle .ch-toggle-btn');
+  btns.forEach(function(b) {
+    b.classList.toggle('active', b.textContent.toLowerCase() === mode);
+  });
+  renderPerf();
+}
+
+function setStepGroupBy(mode) {
+  stepGroupBy = mode;
+  var btns = document.querySelectorAll('#stepGroupToggle .ch-toggle-btn');
+  btns.forEach(function(b) {
+    b.classList.toggle('active', b.textContent.toLowerCase() === mode);
   });
   renderSteps();
 }
@@ -600,6 +691,15 @@ function initAllDropdowns() {
 
   // Step tab: campaigns
   ddInit('step-campaign', campOpts, renderSteps);
+
+  // Funnel tab: campaigns
+  ddInit('funnel-campaign', campOpts, renderFunnel);
+
+  // Funnel tab: types
+  ddInit('funnel-type', typeOpts, renderFunnel);
+
+  // Funnel tab: senders
+  ddInit('funnel-sender', senderOpts, renderFunnel);
 }
 
 // Click outside closes dropdowns
@@ -625,6 +725,7 @@ function renderAll() {
   renderOverview();
   renderPerf();
   renderSteps();
+  renderFunnel();
   renderCopy();
   renderAB();
   renderTrends();
@@ -687,8 +788,30 @@ function renderPerf() {
   // Filter
   var filtered = enriched.filter(function(d) { return perfAccepts(d); });
 
+  // Group by sender if needed (before sort)
+  if (perfGroupBy === 'sender') {
+    var senderMap = {};
+    filtered.forEach(function(d) {
+      var s = d.campaign.sender || '(none)';
+      if (!senderMap[s]) {
+        senderMap[s] = {name: s, types: {}, invites:0, accepts:0, sent:0, replies:0, emails:0, eReplies:0, interested:0, pl:0, leads:0, lastAct:'', campaigns:0};
+      }
+      var sm = senderMap[s];
+      sm.types[d.campaign.type] = true;
+      sm.invites += d.invites; sm.accepts += d.accepts;
+      sm.sent += d.sent; sm.replies += d.replies;
+      sm.emails += d.emails; sm.eReplies += d.eReplies;
+      sm.interested += d.interested;
+      sm.pl += d.pl; sm.leads += d.campaign.lead_count;
+      sm.campaigns++;
+      var la = d.campaign.last_activity || '';
+      if (la > sm.lastAct) sm.lastAct = la;
+    });
+    filtered = Object.values(senderMap);
+  }
+
   // Sort
-  filtered = applySort(filtered, perfSortCol, perfSortDir, perfExtract);
+  filtered = applySort(filtered, perfSortCol, perfSortDir, perfGroupBy === 'sender' ? senderExtract : perfExtract);
 
   // Compute totals (from filtered data)
   var t = {invites: 0, accepts: 0, sent: 0, replies: 0, emails: 0, eReplies: 0, interested: 0, pl: 0, leads: 0};
@@ -701,15 +824,16 @@ function renderPerf() {
     t.eReplies += d.eReplies;
     t.interested += d.interested;
     t.pl += d.pl;
-    t.leads += d.campaign.lead_count;
+    t.leads += perfGroupBy === 'sender' ? d.leads : d.campaign.lead_count;
   });
 
   // Build rows
   var rows = '';
+  var totalLabel = perfGroupBy === 'sender' ? 'TOTAL (' + filtered.length + ' senders)' : 'TOTAL (' + filtered.length + ' campaigns)';
 
   // Totals row
   rows += '<tr class="total-row">' +
-    '<td class="td-campaign" style="font-weight:700;">TOTAL (' + filtered.length + ' campaigns)</td>' +
+    '<td class="td-campaign" style="font-weight:700;">' + totalLabel + '</td>' +
     '<td class="td-type">—</td>' +
     '<td>—</td>' +
     '<td class="td-num">' + fmtNum(t.leads) + '</td>' +
@@ -726,20 +850,37 @@ function renderPerf() {
 
   // Data rows
   filtered.forEach(function(d) {
-    var c = d.campaign;
-    var lastAct = c.last_activity ? c.last_activity.split('T')[0] : 'Never';
-    rows += '<tr>' +
-      '<td class="td-campaign" title="' + c.name.replace(/"/g, '&quot;') + '">' + c.name + '</td>' +
-      '<td class="td-type">' + c.type + '</td>' +
-      '<td>' + (c.sender || '') + '</td>' +
-      '<td class="td-num">' + fmtNum(c.lead_count) + '</td>' +
-      '<td class="td-num">' + fmtNum(d.pl) + '</td>' +
-      '<td>' + compactCell(d.invites, d.accepts, 'invite') + '</td>' +
-      '<td>' + compactCell(d.sent, d.replies, 'dm') + '</td>' +
-      '<td>' + emailCell(d.emails, d.eReplies) + '</td>' +
-      '<td class="td-num">' + fmtNum(d.interested) + '</td>' +
-      '<td style="font-size:0.72rem;color:var(--muted);">' + lastAct + '</td>' +
-      '</tr>';
+    if (perfGroupBy === 'sender') {
+      var lastAct = d.lastAct ? d.lastAct.split('T')[0] : 'Never';
+      var types = Object.keys(d.types).sort().join(', ');
+      rows += '<tr>' +
+        '<td class="td-campaign">' + d.name + '</td>' +
+        '<td class="td-type">' + types + '</td>' +
+        '<td>' + d.name + '</td>' +
+        '<td class="td-num">' + fmtNum(d.leads) + '</td>' +
+        '<td class="td-num">' + fmtNum(d.pl) + '</td>' +
+        '<td>' + compactCell(d.invites, d.accepts, 'invite') + '</td>' +
+        '<td>' + compactCell(d.sent, d.replies, 'dm') + '</td>' +
+        '<td>' + emailCell(d.emails, d.eReplies) + '</td>' +
+        '<td class="td-num">' + fmtNum(d.interested) + '</td>' +
+        '<td style="font-size:0.72rem;color:var(--muted);">' + lastAct + '</td>' +
+        '</tr>';
+    } else {
+      var c = d.campaign;
+      var lastAct2 = c.last_activity ? c.last_activity.split('T')[0] : 'Never';
+      rows += '<tr>' +
+        '<td class="td-campaign" title="' + c.name.replace(/"/g, '&quot;') + '">' + c.name + '</td>' +
+        '<td class="td-type">' + c.type + '</td>' +
+        '<td>' + (c.sender || '') + '</td>' +
+        '<td class="td-num">' + fmtNum(c.lead_count) + '</td>' +
+        '<td class="td-num">' + fmtNum(d.pl) + '</td>' +
+        '<td>' + compactCell(d.invites, d.accepts, 'invite') + '</td>' +
+        '<td>' + compactCell(d.sent, d.replies, 'dm') + '</td>' +
+        '<td>' + emailCell(d.emails, d.eReplies) + '</td>' +
+        '<td class="td-num">' + fmtNum(d.interested) + '</td>' +
+        '<td style="font-size:0.72rem;color:var(--muted);">' + lastAct2 + '</td>' +
+        '</tr>';
+    }
   });
   document.getElementById('perfBody').innerHTML = rows;
 }
@@ -750,8 +891,10 @@ function renderSteps() {
   // Build per-campaign: invite + ordered message steps
   var stepData = {};
   var globalMaxMsg = 0;
+  var campaignSender = {}; // cid -> sender name
   data.forEach(function(d) {
     var cid = d.campaign.id;
+    campaignSender[cid] = d.campaign.sender || '(none)';
     if (!stepData[cid]) {
       stepData[cid] = {
         name: d.campaign.name, id: cid,
@@ -790,6 +933,32 @@ function renderSteps() {
     return stepAccepts({campaign: {id: sd.id}}); // wrap for stepAccepts
   });
 
+  // Group by sender if requested
+  if (stepGroupBy === 'sender') {
+    var senderMerged = {};
+    stepArr.forEach(function(sd) {
+      var s = campaignSender[sd.id] || '(none)';
+      if (!senderMerged[s]) {
+        senderMerged[s] = {name: s, id: s, inviteSent: {}, inviteAccepted: {}, msgSteps: {}};
+      }
+      var sm = senderMerged[s];
+      // Merge invite sets
+      Object.keys(sd.inviteSent).forEach(function(k) { sm.inviteSent[k] = true; });
+      Object.keys(sd.inviteAccepted).forEach(function(k) { sm.inviteAccepted[k] = true; });
+      // Merge message steps
+      Object.keys(sd.msgSteps).forEach(function(sn) {
+        if (!sm.msgSteps[sn]) sm.msgSteps[sn] = {dmSent:{}, dmReplied:{}, emailSent:{}, emailReplied:{}};
+        var ss = sd.msgSteps[sn];
+        var dm = sm.msgSteps[sn];
+        Object.keys(ss.dmSent).forEach(function(k) { dm.dmSent[k] = true; });
+        Object.keys(ss.dmReplied).forEach(function(k) { dm.dmReplied[k] = true; });
+        Object.keys(ss.emailSent).forEach(function(k) { dm.emailSent[k] = true; });
+        Object.keys(ss.emailReplied).forEach(function(k) { dm.emailReplied[k] = true; });
+      });
+    });
+    stepArr = Object.values(senderMerged);
+  }
+
   // Compute totals across filtered campaigns
   var totals = {invSent: 0, invAcc: 0, msgSteps: {}};
   stepArr.forEach(function(sd) {
@@ -806,14 +975,16 @@ function renderSteps() {
   });
 
   // Build table: column 0 = Connect, columns 1..N = Msg N
-  var html = '<table><thead><tr><th>Campaign</th><th>Connect</th>';
+  var headerLabel = stepGroupBy === 'sender' ? 'Sender' : 'Campaign';
+  var totalLabel = stepGroupBy === 'sender' ? 'TOTAL (' + stepArr.length + ' senders)' : 'TOTAL (' + stepArr.length + ' campaigns)';
+  var html = '<table><thead><tr><th>' + headerLabel + '</th><th>Connect</th>';
   for (var m = 1; m <= globalMaxMsg + 1; m++) {
     html += '<th>Msg ' + m + '</th>';
   }
   html += '</tr></thead><tbody>';
 
   // Totals row
-  html += '<tr class="total-row"><td class="td-campaign" style="font-weight:700;">TOTAL (' + stepArr.length + ' campaigns)</td>';
+  html += '<tr class="total-row"><td class="td-campaign" style="font-weight:700;">' + totalLabel + '</td>';
   html += '<td>' + compactCell(totals.invSent, totals.invAcc, 'invite') + '</td>';
   for (var mi = 0; mi <= globalMaxMsg; mi++) {
     var tms = totals.msgSteps[mi] || {dmS:0, dmR:0, emS:0, emR:0};
@@ -862,6 +1033,136 @@ function renderSteps() {
   });
   html += '</tbody></table>';
   document.getElementById('stepTable').innerHTML = html;
+}
+
+
+// ── FUNNEL ──
+function setFunnelChannel(ch) {
+  funnelChannel = ch;
+  var btns = document.querySelectorAll('#funnelChannelToggle .ch-toggle-btn');
+  var vals = ['both', 'linkedin', 'email'];
+  btns.forEach(function(b, i) {
+    b.classList.toggle('active', vals[i] === ch);
+  });
+  renderFunnel();
+}
+
+function renderFunnel() {
+  var data = getFiltered();
+
+  // Apply dropdown filters
+  data = data.filter(function(d) {
+    if (ddIsFiltered('funnel-campaign') && !ddMatch('funnel-campaign', d.campaign.id)) return false;
+    if (ddIsFiltered('funnel-type') && !ddMatch('funnel-type', d.campaign.type)) return false;
+    if (ddIsFiltered('funnel-sender') && !ddMatch('funnel-sender', d.campaign.sender || '(none)')) return false;
+    return true;
+  });
+
+  // Collect leads per funnel stage
+  var allLeads = {};
+  var step0 = {};       // invite_sent
+  var stepLeads = {};   // stepLeads[1], [2], [3], [4] — each holds lead IDs with a send at that step
+  var interested = {};
+  var maxStep = 0;
+
+  data.forEach(function(d) {
+    d.activities.forEach(function(a) {
+      var lid = a.lead_id;
+      if (!lid) return;
+      allLeads[lid] = true;
+
+      if (a.step === 'invite_sent') step0[lid] = true;
+
+      var sn = a.sequence_step;
+      if (sn === undefined || sn === null) return;
+      if (sn > maxStep) maxStep = sn;
+
+      var isDm = a.step === 'message_sent';
+      var isEm = a.step === 'email_sent';
+      var countIt = false;
+      if (funnelChannel === 'both') countIt = isDm || isEm;
+      else if (funnelChannel === 'linkedin') countIt = isDm;
+      else if (funnelChannel === 'email') countIt = isEm;
+
+      if (countIt) {
+        if (!stepLeads[sn]) stepLeads[sn] = {};
+        stepLeads[sn][lid] = true;
+      }
+
+      if (a.step === 'interested') interested[lid] = true;
+    });
+  });
+
+  var total = Object.keys(allLeads).length;
+  var s0 = Object.keys(step0).length;
+
+  // Build stages — show steps 1 through 3, then step 4+ combined
+  var stages = [];
+  stages.push({label: 'Step 0: Connect', cls: 'step0', count: s0});
+
+  for (var si = 1; si <= 3; si++) {
+    var cnt = stepLeads[si] ? Object.keys(stepLeads[si]).length : 0;
+    stages.push({label: 'Step ' + si + ': Msg ' + si, cls: 'step' + si, count: cnt});
+  }
+  // Step 4+ combined
+  var s4plus = 0;
+  Object.keys(stepLeads).forEach(function(k) {
+    if (parseInt(k) >= 4) s4plus += Object.keys(stepLeads[k]).length;
+  });
+  if (s4plus > 0) {
+    stages.push({label: 'Step 4+: Later Msgs', cls: 'step3', count: s4plus});
+  }
+
+  var intCount = Object.keys(interested).length;
+  stages.push({label: 'Meeting Booked', cls: 'goal', count: intCount});
+
+  // Render funnel
+  var maxCount = total || 1;
+  var html = '';
+
+  // Total bar
+  html += '<div class="funnel-stage">';
+  html += '<div class="funnel-bar funnel-bar-total" style="width:100%;">';
+  html += fmtNum(total) + '<span class="funnel-sub">Total Pipeline</span>';
+  html += '</div></div>';
+
+  var prevCount = total;
+  stages.forEach(function(st) {
+    var pct = maxCount > 0 ? (st.count / maxCount * 100) : 0;
+    var width = Math.max(pct, 6);
+    var convPct = prevCount > 0 ? (st.count / prevCount * 100) : 0;
+    var drop = prevCount - st.count;
+
+    var dropHtml = '';
+    if (drop > 0) {
+      dropHtml = '▼ <span style="color:var(--danger);">' + fmtNum(drop) + ' lost</span> <span style="color:var(--muted);">(' + (100 - convPct).toFixed(0) + '%)</span>';
+    } else if (drop < 0) {
+      dropHtml = '▲ <span style="color:var(--warning);">' + fmtNum(-drop) + ' gained</span>';
+    } else {
+      dropHtml = '— <span style="color:var(--muted);">no change</span>';
+    }
+    html += '<div class="funnel-arrow">' + dropHtml + '</div>';
+
+    html += '<div class="funnel-stage">';
+    html += '<div class="funnel-bar funnel-bar-' + st.cls + '" style="width:' + width + '%;">';
+    html += fmtNum(st.count) + '<span class="funnel-sub">' + st.label + '</span>';
+    html += '</div>';
+    // Percent of previous
+    html += '<div style="font-size:0.68rem;color:var(--muted);margin-top:2px;">' + (prevCount > 0 ? convPct.toFixed(0) + '% of previous' : '—') + '</div>';
+    html += '</div>';
+
+    prevCount = st.count;
+  });
+
+  document.getElementById('funnelVis').innerHTML = html || '<p style="color:var(--muted);text-align:center;">No data for selected filters.</p>';
+
+  // Meta line
+  var chLabel = funnelChannel === 'both' ? 'LinkedIn + Email' : (funnelChannel === 'linkedin' ? 'LinkedIn Only' : 'Email Only');
+  var parts = ['Channel: <strong>' + chLabel + '</strong>', total + ' total leads', 'Maturity: ' + maturityDays + 'd'];
+  if (ddIsFiltered('funnel-campaign')) parts.push('campaigns filtered');
+  if (ddIsFiltered('funnel-type')) parts.push('types filtered');
+  if (ddIsFiltered('funnel-sender')) parts.push('senders filtered');
+  document.getElementById('funnelMeta').innerHTML = parts.join(' · ');
 }
 
 // ── COPY ANALYSIS ──
