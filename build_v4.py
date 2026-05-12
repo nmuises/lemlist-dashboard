@@ -38,13 +38,15 @@ header { margin-bottom:24px; }
 header h1 { font-size:1.8rem; font-weight:700; margin-bottom:4px; }
 header p { color:var(--muted); font-size:0.9rem; }
 
-.controls { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:24px; }
-.controls h3 { font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:12px; }
-.maturity-control { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
-.maturity-control label { font-size:0.9rem; color:var(--muted); }
-.maturity-control input[type=range] { width:300px; accent-color:var(--accent); }
-.maturity-value { font-size:1.2rem; font-weight:700; color:var(--accent); min-width:60px; text-align:center; }
-.maturity-desc { font-size:0.8rem; color:var(--muted); font-style:italic; }
+.controls { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px 20px; margin-bottom:24px; }
+.controls h3 { font-size:0.82rem; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); margin-bottom:8px; font-weight:700; }
+.controls-split { display:flex; gap:32px; flex-wrap:wrap; }
+.controls-col { flex:1; min-width:280px; }
+.maturity-control { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.maturity-control label { font-size:0.8rem; color:var(--muted); white-space:nowrap; }
+.maturity-control input[type=range] { width:180px; accent-color:var(--accent); }
+.maturity-value { font-size:1rem; font-weight:700; color:var(--accent); min-width:40px; text-align:center; }
+.maturity-desc { font-size:0.72rem; color:var(--muted); font-style:italic; margin-top:8px; }
 
 .email-controls { display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-bottom:16px; }
 .email-controls input[type=date] { background:var(--bg); border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:6px; font-size:0.85rem; }
@@ -57,11 +59,12 @@ header p { color:var(--muted); font-size:0.9rem; }
 .badge-warning { background:rgba(245,158,11,0.15); color:var(--warning); }
 .badge-success { background:rgba(34,197,94,0.15); color:var(--success); }
 
-.stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:16px; margin-bottom:16px; }
-.stat { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:16px; }
-.stat-value { font-size:1.6rem; font-weight:700; margin-bottom:4px; }
-.stat-label { font-size:0.8rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.03em; }
-.stat-delta { font-size:0.75rem; margin-top:4px; color:var(--muted); }
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:12px; }
+.stat { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+.stat-value { font-size:1.35rem; font-weight:700; margin-bottom:2px; }
+.stat-label { font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.03em; }
+.stat-delta { font-size:0.75rem; margin-top:3px; color:var(--muted); font-weight:500; }
+.section-label { grid-column:1/-1; margin-top:6px; margin-bottom:2px; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; font-weight:700; }
 
 table { width:100%; border-collapse:collapse; font-size:0.82rem; }
 th { text-align:left; padding:8px 10px; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.68rem; letter-spacing:0.03em; border-bottom:1px solid var(--border); white-space:nowrap; }
@@ -164,40 +167,42 @@ footer { text-align:center; padding:40px 0; color:var(--muted); font-size:0.8rem
   <p>28 campaigns · 6,024 activities · 1,280 leads · Built 2026-05-06</p>
 </header>
 
-<div class="controls">
-  <h3>Maturity Filter</h3>
-  <div class="maturity-control">
-    <label>Exclude activity newer than:</label>
-    <input type="range" id="maturitySlider" min="0" max="30" value="7" step="1">
-    <div class="maturity-value"><span id="maturityVal">7</span>d</div>
-    <div class="maturity-desc" id="maturityDesc">Standard — DMs need ~7 days for replies</div>
-  </div>
-</div>
-
-<div class="controls">
-  <h3>Rate Benchmarks <span style="font-weight:400;font-size:0.75rem;color:var(--muted);">(targets for color coding)</span></h3>
-  <div class="maturity-control">
-    <label>Invite accept:</label>
-    <input type="range" id="inviteTarget" min="5" max="60" value="30" step="1">
-    <div class="maturity-value" style="color:var(--accent2);"><span id="inviteTargetVal">30</span>%</div>
-  </div>
-  <div class="maturity-control">
-    <label>DM reply:</label>
-    <input type="range" id="dmTarget" min="2" max="50" value="10" step="1">
-    <div class="maturity-value"><span id="dmTargetVal">10</span>%</div>
-  </div>
-  <div class="maturity-control">
-    <label>Email reply:</label>
-    <input type="range" id="emailTarget" min="1" max="30" value="5" step="1">
-    <div class="maturity-value" style="color:var(--info);"><span id="emailTargetVal">5</span>%</div>
-  </div>
-  <div class="maturity-desc" style="margin-top:8px;"><span style="color:var(--success);">Green</span> = at or above target · <span style="color:var(--warning);">Yellow</span> = 50-99% of target · <span style="color:var(--danger);">Red</span> = below 50%</div>
-</div>
-
 <div class="card">
   <h2>Overview <span class="badge badge-info">Live</span></h2>
   <div class="stats-grid" id="overviewStats"></div>
   <div id="overviewInsights"></div>
+</div>
+
+<div class="controls">
+  <div class="controls-split">
+    <div class="controls-col">
+      <h3>Maturity Filter</h3>
+      <div class="maturity-control">
+        <label>Exclude newer than:</label>
+        <input type="range" id="maturitySlider" min="0" max="30" value="7" step="1">
+        <div class="maturity-value"><span id="maturityVal">7</span>d</div>
+      </div>
+    </div>
+    <div class="controls-col">
+      <h3>Rate Benchmarks</h3>
+      <div class="maturity-control">
+        <label>Invite accept:</label>
+        <input type="range" id="inviteTarget" min="5" max="60" value="30" step="1">
+        <div class="maturity-value" style="color:var(--accent2);"><span id="inviteTargetVal">30</span>%</div>
+      </div>
+      <div class="maturity-control">
+        <label>DM reply:</label>
+        <input type="range" id="dmTarget" min="2" max="50" value="10" step="1">
+        <div class="maturity-value"><span id="dmTargetVal">10</span>%</div>
+      </div>
+      <div class="maturity-control">
+        <label>Email reply:</label>
+        <input type="range" id="emailTarget" min="1" max="30" value="5" step="1">
+        <div class="maturity-value" style="color:var(--info);"><span id="emailTargetVal">5</span>%</div>
+      </div>
+    </div>
+  </div>
+  <div class="maturity-desc"><span style="color:var(--success);">Green</span> = at or above target · <span style="color:var(--warning);">Yellow</span> = 50-99% · <span style="color:var(--danger);">Red</span> = below 50%</div>
 </div>
 
 <div class="tabs">
@@ -208,6 +213,7 @@ footer { text-align:center; padding:40px 0; color:var(--muted); font-size:0.8rem
   <div class="tab" onclick="switchTab('ab')">A/B Tests</div>
   <div class="tab" onclick="switchTab('trends')">Trends</div>
   <div class="tab" onclick="switchTab('email')">Email</div>
+  <div class="tab" onclick="switchTab('pipeline')">Pipeline</div>
   <div class="tab" onclick="switchTab('raw')">Raw Data</div>
 </div>
 
@@ -238,8 +244,9 @@ footer { text-align:center; padding:40px 0; color:var(--muted); font-size:0.8rem
         <th class="th-sort" onclick="perfSort('name')">Campaign <span class="sort-arrow" id="sa-perf-name"></span></th>
         <th class="th-sort" onclick="perfSort('type')">Type <span class="sort-arrow" id="sa-perf-type"></span></th>
         <th class="th-sort" onclick="perfSort('sender')">Sender <span class="sort-arrow" id="sa-perf-sender"></span></th>
-        <th class="th-sort td-num" onclick="perfSort('leads')">Current Leads <span class="sort-arrow" id="sa-perf-leads"></span></th>
-        <th class="th-sort td-num" onclick="perfSort('pipeline')">Pipeline <span class="sort-arrow" id="sa-perf-pipeline"></span></th>
+        <th class="th-sort td-num" onclick="perfSort('leadsIn')">Leads In <span class="sort-arrow" id="sa-perf-leadsIn"></span></th>
+        <th class="th-sort td-num" onclick="perfSort('finished')">Finished <span class="sort-arrow" id="sa-perf-finished"></span></th>
+        <th class="th-sort td-num" onclick="perfSort('inProgress')">In Progress <span class="sort-arrow" id="sa-perf-inProgress"></span></th>
         <th class="th-sort" onclick="perfSort('invites')">Invites <span class="sort-arrow" id="sa-perf-invites"></span></th>
         <th class="th-sort" onclick="perfSort('dms')">DMs <span class="sort-arrow" id="sa-perf-dms"></span></th>
         <th class="th-sort" onclick="perfSort('emails')">Emails <span class="sort-arrow" id="sa-perf-emails"></span></th>
@@ -368,7 +375,18 @@ footer { text-align:center; padding:40px 0; color:var(--muted); font-size:0.8rem
   </div>
 </div>
 
-<footer>Muir AI · Lemlist Performance Dashboard · Built 2026-05-06</footer>
+<div class="tab-content" id="tab-pipeline">
+  <div class="card">
+    <h2>Pipeline Health — Lead Outcomes</h2>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:12px;">
+      Shows what happens to leads that have <strong>finished</strong> their campaign journey. A lead is finished when they reply (stops immediately), never accept the LinkedIn connection and maturity passes on the invite (Cold), or accept, receive all follow-ups, and maturity passes on the last step without replying (Warm Prospect). Unfinished leads are still in sequence — campaign hasn't played out yet.
+    </div>
+    <div class="stats-grid" id="pipelineTotals"></div>
+    <div class="scroll-h"><div id="pipelineTable"></div></div>
+  </div>
+</div>
+
+<footer>Muir AI · Lemlist Performance Dashboard · Built 2026-05-12</footer>
 </div>
 ''')
 
@@ -624,8 +642,9 @@ function perfExtract(d, col) {
     case 'name': return d.campaign.name;
     case 'type': return d.campaign.type;
     case 'sender': return d.campaign.sender || '';
-    case 'leads': return d.campaign.lead_count;
-    case 'pipeline': return d.pl;
+    case 'leadsIn': return d.leadsIn;
+    case 'finished': return d.finished;
+    case 'inProgress': return d.inProgress;
     case 'invites': return d.invites;
     case 'dms': return d.sent;
     case 'emails': return d.emails;
@@ -640,8 +659,9 @@ function senderExtract(d, col) {
     case 'name': return d.name;
     case 'type': return Object.keys(d.types).sort().join(',');
     case 'sender': return d.name;
-    case 'leads': return d.leads;
-    case 'pipeline': return d.pl;
+    case 'leadsIn': return d.leadsIn;
+    case 'finished': return d.finished;
+    case 'inProgress': return d.inProgress;
     case 'invites': return d.invites;
     case 'dms': return d.sent;
     case 'emails': return d.emails;
@@ -759,6 +779,7 @@ function renderAll() {
   renderAB();
   renderTrends();
   renderEmail();
+  renderPipeline();
   renderRaw();
 }
 
@@ -777,13 +798,33 @@ function renderOverview() {
   });
   var pipelineCount = Object.keys(allLeads).length;
 
+  // Pipeline overview cards
+  var pt;
+  try { pt = computePipelineStats().totals; } catch(e) { pt = {leadsIn:0,finished:0,replied:0,warm:0,cold:0,unfinished:0}; }
+  var pFinished = pt.finished;
+
   document.getElementById('overviewStats').innerHTML =
-    '<div class="stat"><div class="stat-value">' + fmtNum(pipelineCount) + '</div><div class="stat-label">Pipeline Leads</div></div>' +
-    '<div class="stat"><div class="stat-value">' + fmtNum(totalSent) + '</div><div class="stat-label">LinkedIn DMs Sent</div></div>' +
-    '<div class="stat"><div class="stat-value" style="color:var(--success)">' + fmtNum(totalReplies) + '</div><div class="stat-label">DM Replies</div><div class="stat-delta">' + fmtPct(totalReplies, totalSent) + ' reply rate</div></div>' +
-    '<div class="stat"><div class="stat-value" style="color:var(--accent2)">' + fmtNum(totalInterested) + '</div><div class="stat-label">Marked Interested</div></div>' +
-    '<div class="stat"><div class="stat-value">' + fmtNum(totalEmails) + '</div><div class="stat-label">Emails Sent</div></div>' +
-    '<div class="stat"><div class="stat-value">' + fmtNum(totalEReplies) + '</div><div class="stat-label">Email Replies</div><div class="stat-delta">' + fmtPct(totalEReplies, totalEmails) + '</div></div>';
+    '<div class=\"section-label\" style=\"color:var(--accent);\">Pipeline Health</div>' +
+    '<div class=\"stat\"><div class=\"stat-value\">' + fmtNum(pt.leadsIn) + '</div><div class=\"stat-label\">Total Leads In</div></div>' +
+    '<div class=\"stat\"><div class=\"stat-value\">' + fmtNum(pFinished) + '</div><div class=\"stat-label\">Leads Finished</div><div class=\"stat-delta\" style=\"color:var(--accent);\">' + fmtPct(pFinished, pt.leadsIn) + ' of total</div></div>' +
+    '<div class=\"stat\"><div class=\"stat-value\" style=\"color:var(--success)\">' + fmtNum(pt.replied) + '</div><div class=\"stat-label\">Replied</div><div class=\"stat-delta\" style=\"color:var(--success);\">' + fmtPct(pt.replied, pFinished) + ' of finished</div></div>' +
+    '<div class=\"stat\"><div class=\"stat-value\" style=\"color:var(--warning)\">' + fmtNum(pt.warm) + '</div><div class=\"stat-label\">Warm Prospects</div><div class=\"stat-delta\" style=\"color:var(--warning);\">' + fmtPct(pt.warm, pFinished) + ' of finished</div></div>' +
+    '<div class=\"stat\"><div class=\"stat-value\">' + fmtNum(pt.cold) + '</div><div class=\"stat-label\">Cold</div><div class=\"stat-delta\">' + fmtPct(pt.cold, pFinished) + ' of finished</div></div>' +
+    '<div style=\"display:flex;gap:12px;grid-column:1/-1;margin-top:4px;\">' +
+      '<div style=\"flex:1;\"><div class=\"section-label\" style=\"color:var(--accent);\">LinkedIn</div>' +
+        '<div style=\"display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;\">' +
+          '<div class=\"stat\"><div class=\"stat-value\">' + fmtNum(totalSent) + '</div><div class=\"stat-label\">DMs Sent</div></div>' +
+          '<div class=\"stat\"><div class=\"stat-value\" style=\"color:var(--success)\">' + fmtNum(totalReplies) + '</div><div class=\"stat-label\">DM Replies</div><div class=\"stat-delta\" style=\"color:var(--accent);\">' + fmtPct(totalReplies, totalSent) + ' reply rate</div></div>' +
+          '<div class=\"stat\"><div class=\"stat-value\" style=\"color:var(--accent2)\">' + fmtNum(totalInterested) + '</div><div class=\"stat-label\">Marked Interested</div></div>' +
+        '</div>' +
+      '</div>' +
+      '<div style=\"flex:1;\"><div class=\"section-label\" style=\"color:var(--accent);\">Email</div>' +
+        '<div style=\"display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;\">' +
+          '<div class=\"stat\"><div class=\"stat-value\">' + fmtNum(totalEmails) + '</div><div class=\"stat-label\">Emails Sent</div></div>' +
+          '<div class=\"stat\"><div class=\"stat-value\">' + fmtNum(totalEReplies) + '</div><div class=\"stat-label\">Email Replies</div><div class=\"stat-delta\" style=\"color:var(--info);\">' + fmtPct(totalEReplies, totalEmails) + '</div></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
 
   var insights = [];
   var replyRate = totalSent > 0 ? totalReplies / totalSent * 100 : 0;
@@ -797,6 +838,8 @@ function renderOverview() {
 // ── PERFORMANCE BY CHANNEL ──
 function renderPerf() {
   var data = getFiltered();
+  // Compute pipeline stats for naming standardization
+  var pipeStats = computePipelineStats();
   // Enrich with computed values
   var enriched = [];
   data.forEach(function(d) {
@@ -810,8 +853,9 @@ function renderPerf() {
     var eReplies = uniqueLeads(acts, 'email_replied');
     var interested = uniqueLeads(acts, 'interested');
     var pl = pipelineLeads(c, acts);
+    var ps = pipeStats.byCampaign[c.id] || {leadsIn:0, finished:0, unfinished:0};
     if (c.lead_count === 0 && pl === 0 && c.status !== 'running') return;
-    enriched.push({campaign: c, invites: invites, accepts: accepts, sent: sent, replies: replies, emails: emails, eReplies: eReplies, interested: interested, pl: pl});
+    enriched.push({campaign: c, invites: invites, accepts: accepts, sent: sent, replies: replies, emails: emails, eReplies: eReplies, interested: interested, pl: pl, leadsIn: ps.leadsIn, finished: ps.finished, inProgress: ps.unfinished});
   });
 
   // Filter
@@ -823,7 +867,7 @@ function renderPerf() {
     filtered.forEach(function(d) {
       var s = d.campaign.sender || '(none)';
       if (!senderMap[s]) {
-        senderMap[s] = {name: s, types: {}, invites:0, accepts:0, sent:0, replies:0, emails:0, eReplies:0, interested:0, pl:0, leads:0, lastAct:'', campaigns:0};
+        senderMap[s] = {name: s, types: {}, invites:0, accepts:0, sent:0, replies:0, emails:0, eReplies:0, interested:0, pl:0, leadsIn:0, finished:0, inProgress:0, leads:0, lastAct:'', campaigns:0};
       }
       var sm = senderMap[s];
       sm.types[d.campaign.type] = true;
@@ -831,7 +875,7 @@ function renderPerf() {
       sm.sent += d.sent; sm.replies += d.replies;
       sm.emails += d.emails; sm.eReplies += d.eReplies;
       sm.interested += d.interested;
-      sm.pl += d.pl; sm.leads += d.campaign.lead_count;
+      sm.pl += d.pl; sm.leadsIn += d.leadsIn; sm.finished += d.finished; sm.inProgress += d.inProgress; sm.leads += d.campaign.lead_count;
       sm.campaigns++;
       var la = d.campaign.last_activity || '';
       if (la > sm.lastAct) sm.lastAct = la;
@@ -843,7 +887,7 @@ function renderPerf() {
   filtered = applySort(filtered, perfSortCol, perfSortDir, perfGroupBy === 'sender' ? senderExtract : perfExtract);
 
   // Compute totals (from filtered data)
-  var t = {invites: 0, accepts: 0, sent: 0, replies: 0, emails: 0, eReplies: 0, interested: 0, pl: 0, leads: 0};
+  var t = {invites: 0, accepts: 0, sent: 0, replies: 0, emails: 0, eReplies: 0, interested: 0, pl: 0, leadsIn: 0, finished: 0, inProgress: 0, leads: 0};
   filtered.forEach(function(d) {
     t.invites += d.invites;
     t.accepts += d.accepts;
@@ -853,6 +897,9 @@ function renderPerf() {
     t.eReplies += d.eReplies;
     t.interested += d.interested;
     t.pl += d.pl;
+    t.leadsIn += d.leadsIn;
+    t.finished += d.finished;
+    t.inProgress += d.inProgress;
     t.leads += perfGroupBy === 'sender' ? d.leads : d.campaign.lead_count;
   });
 
@@ -865,8 +912,9 @@ function renderPerf() {
     '<td class="td-campaign" style="font-weight:700;">' + totalLabel + '</td>' +
     '<td class="td-type">—</td>' +
     '<td>—</td>' +
-    '<td class="td-num">' + fmtNum(t.leads) + '</td>' +
-    '<td class="td-num">' + fmtNum(t.pl) + '</td>' +
+    '<td class="td-num">' + fmtNum(t.leadsIn) + '</td>' +
+    '<td class="td-num" style="font-weight:600;">' + fmtNum(t.finished) + '</td>' +
+    '<td class="td-num">' + fmtNum(t.inProgress) + '</td>' +
     '<td>' + compactCell(t.invites, t.accepts, 'invite') + '</td>' +
     '<td>' + compactCell(t.sent, t.replies, 'dm') + '</td>' +
     '<td>' + emailCell(t.emails, t.eReplies) + '</td>' +
@@ -886,8 +934,9 @@ function renderPerf() {
         '<td class="td-campaign">' + d.name + '</td>' +
         '<td class="td-type">' + types + '</td>' +
         '<td>' + d.name + '</td>' +
-        '<td class="td-num">' + fmtNum(d.leads) + '</td>' +
-        '<td class="td-num">' + fmtNum(d.pl) + '</td>' +
+        '<td class="td-num">' + fmtNum(d.leadsIn) + '</td>' +
+        '<td class="td-num" style="font-weight:600;">' + fmtNum(d.finished) + '</td>' +
+        '<td class="td-num">' + fmtNum(d.inProgress) + '</td>' +
         '<td>' + compactCell(d.invites, d.accepts, 'invite') + '</td>' +
         '<td>' + compactCell(d.sent, d.replies, 'dm') + '</td>' +
         '<td>' + emailCell(d.emails, d.eReplies) + '</td>' +
@@ -901,8 +950,9 @@ function renderPerf() {
         '<td class="td-campaign" title="' + c.name.replace(/"/g, '&quot;') + '">' + c.name + '</td>' +
         '<td class="td-type">' + c.type + '</td>' +
         '<td>' + (c.sender || '') + '</td>' +
-        '<td class="td-num">' + fmtNum(c.lead_count) + '</td>' +
-        '<td class="td-num">' + fmtNum(d.pl) + '</td>' +
+        '<td class="td-num">' + fmtNum(d.leadsIn) + '</td>' +
+        '<td class="td-num" style="font-weight:600;">' + fmtNum(d.finished) + '</td>' +
+        '<td class="td-num">' + fmtNum(d.inProgress) + '</td>' +
         '<td>' + compactCell(d.invites, d.accepts, 'invite') + '</td>' +
         '<td>' + compactCell(d.sent, d.replies, 'dm') + '</td>' +
         '<td>' + emailCell(d.emails, d.eReplies) + '</td>' +
@@ -922,6 +972,8 @@ function renderSteps() {
   var globalMaxMsg = 0;
   var campaignSender = {}; // cid -> sender name
   data.forEach(function(d) {
+    // Skip empty campaigns (0 leads, 0 mature activity)
+    if (d.campaign.lead_count === 0 && d.campaign.status !== 'running') return;
     var cid = d.campaign.id;
     campaignSender[cid] = d.campaign.sender || '(none)';
     if (!stepData[cid]) {
@@ -1473,11 +1525,11 @@ function renderTrends() {
       mon.setDate(d.getDate() - day + 1);
       mon.setHours(0,0,0,0);
       var key = mon.getTime();
-      if (!weekData[key]) weekData[key] = {min: d, max: d, sent: 0, replies: 0};
+      if (!weekData[key]) weekData[key] = {min: d, max: d, sentLeads: {}, replyLeads: {}};
       if (d < weekData[key].min) weekData[key].min = d;
       if (d > weekData[key].max) weekData[key].max = d;
-      if (a.step === 'message_sent') weekData[key].sent++;
-      if (a.step === 'message_replied') weekData[key].replies++;
+      if (a.step === 'message_sent' && a.lead_id) weekData[key].sentLeads[a.lead_id] = true;
+      if (a.step === 'message_replied' && a.lead_id) weekData[key].replyLeads[a.lead_id] = true;
     });
   });
 
@@ -1488,7 +1540,7 @@ function renderTrends() {
     if (f.getTime() !== l.getTime()) {
       label += (f.getMonth() !== l.getMonth() ? '–' + months[l.getMonth()] + ' ' : '–') + l.getDate();
     }
-    return {label: label, sent: w.sent, replies: w.replies};
+    return {label: label, sent: Object.keys(w.sentLeads).length, replies: Object.keys(w.replyLeads).length};
   });
 
   var maxSent = Math.max.apply(null, sorted.map(function(w) { return w.sent; }).concat([1]));
@@ -1595,6 +1647,143 @@ function renderRaw() {
   });
   html += '</tbody></table>';
   document.getElementById('rawList').innerHTML = html;
+}
+
+// ── PIPELINE ──
+function isMatureInvite(date, now) {
+  var d = typeof date === 'string' ? parseDate(date) : date;
+  if (!d) return false;
+  return daysDiff(d, now) >= 14;
+}
+
+function computePipelineStats() {
+  var now = new Date();
+  var totals = {leadsIn: 0, finished: 0, replied: 0, warm: 0, cold: 0, unfinished: 0};
+  var byCampaign = {};
+
+  RAW_DATA.campaigns.forEach(function(c) {
+    // Exclude placeholder and archived campaigns
+    if (c.id === 'cam_CnsNoHDzQLnJPAgxD') return;
+    if (c.archived) return;
+    var acts = c.activities;
+    var leads = {};
+
+    acts.forEach(function(a) {
+      var lid = a.lead_id;
+      if (!lid) return;
+      if (!leads[lid]) {
+        leads[lid] = {hasReply: false, hasAccept: false, hasInviteSent: false, lastDate: null, maxOutreachStep: 0};
+      }
+      var l = leads[lid];
+      if (a.step === 'message_replied' || a.step === 'email_replied') l.hasReply = true;
+      if (a.step === 'invite_sent') l.hasInviteSent = true;
+      if (a.step === 'invite_accepted') l.hasAccept = true;
+      if (a.step === 'message_sent' || a.step === 'email_sent') {
+        if (a.sequence_step > l.maxOutreachStep) l.maxOutreachStep = a.sequence_step;
+      }
+      var d = parseDate(a.date);
+      if (d && (!l.lastDate || d > l.lastDate)) l.lastDate = d;
+    });
+
+    var campMaxStep = 0;
+    acts.forEach(function(a) {
+      if ((a.step === 'message_sent' || a.step === 'email_sent') && a.sequence_step > campMaxStep) {
+        campMaxStep = a.sequence_step;
+      }
+    });
+
+    var hasLI = false;
+    acts.forEach(function(a) { if (a.step === 'invite_sent' || a.step === 'invite_accepted') hasLI = true; });
+
+    var camp = {leadsIn: Object.keys(leads).length, replied: 0, warm: 0, cold: 0, unfinished: 0};
+
+    Object.keys(leads).forEach(function(lid) {
+      var l = leads[lid];
+      if (l.hasReply) {
+        camp.replied++;
+      } else if (l.hasInviteSent && !l.hasAccept) {
+        if (l.lastDate && isMatureInvite(l.lastDate, now)) { camp.cold++; }
+        else { camp.unfinished++; }
+      } else if (l.hasAccept && l.maxOutreachStep >= campMaxStep && campMaxStep > 0) {
+        if (l.lastDate && isMature(l.lastDate, maturityDays, now)) { camp.warm++; }
+        else { camp.unfinished++; }
+      } else if (!hasLI && l.maxOutreachStep >= campMaxStep && campMaxStep > 0) {
+        if (l.lastDate && isMature(l.lastDate, maturityDays, now)) { camp.cold++; }
+        else { camp.unfinished++; }
+      } else {
+        camp.unfinished++;
+      }
+    });
+
+    camp.finished = camp.replied + camp.warm + camp.cold;
+    byCampaign[c.id] = camp;
+
+    totals.leadsIn += camp.leadsIn;
+    totals.replied += camp.replied;
+    totals.warm += camp.warm;
+    totals.cold += camp.cold;
+    totals.unfinished += camp.unfinished;
+  });
+
+  totals.finished = totals.replied + totals.warm + totals.cold;
+  return {totals: totals, byCampaign: byCampaign};
+}
+
+function renderPipeline() {
+  try {
+  var stats = computePipelineStats();
+  var t = stats.totals;
+  var finished = t.finished;
+
+  // Totals row
+  var html = '<div class="stats-grid">' +
+    '<div class="stat"><div class="stat-value">' + fmtNum(t.leadsIn) + '</div><div class="stat-label">Total Leads In</div></div>' +
+    '<div class="stat"><div class="stat-value">' + fmtNum(finished) + '</div><div class="stat-label">Finished</div><div class="stat-delta">' + fmtPct(finished, t.leadsIn) + ' of Leads In</div></div>' +
+    '<div class="stat"><div class="stat-value" style="color:var(--success)">' + fmtNum(t.replied) + '</div><div class="stat-label">Replied</div><div class="stat-delta">' + fmtPct(t.replied, finished) + ' of Finished</div></div>' +
+    '<div class="stat"><div class="stat-value" style="color:var(--warning)">' + fmtNum(t.warm) + '</div><div class="stat-label">Warm Prospects</div><div class="stat-delta">' + fmtPct(t.warm, finished) + ' of Finished</div></div>' +
+    '<div class="stat"><div class="stat-value">' + fmtNum(t.cold) + '</div><div class="stat-label">Cold</div><div class="stat-delta">' + fmtPct(t.cold, finished) + ' of Finished</div></div>' +
+    '<div class="stat"><div class="stat-value" style="color:var(--muted)">' + fmtNum(t.unfinished) + '</div><div class="stat-label">Still In Sequence</div></div>' +
+    '</div>';
+
+  // Per-campaign table
+  html += '<table><thead><tr>' +
+    '<th>Campaign</th>' +
+    '<th class="td-num">Leads In</th>' +
+    '<th class="td-num">Finished</th>' +
+    '<th class="td-num">Replied</th>' +
+    '<th class="td-num">Reply Rate</th>' +
+    '<th class="td-num">Warm</th>' +
+    '<th class="td-num">WP Rate</th>' +
+    '<th class="td-num">Cold</th>' +
+    '<th class="td-num">In Seq.</th>' +
+    '</tr></thead><tbody>';
+
+  RAW_DATA.campaigns.forEach(function(c) {
+    if (c.id === 'cam_CnsNoHDzQLnJPAgxD') return;
+    if (c.archived) return;
+    var d = stats.byCampaign[c.id];
+    if (!d || d.leadsIn === 0) return;
+    var f = d.finished;
+    html += '<tr>' +
+      '<td class="td-campaign" title="' + c.name + '">' + c.name + '</td>' +
+      '<td class="td-num">' + fmtNum(d.leadsIn) + '</td>' +
+      '<td class="td-num">' + fmtNum(f) + '</td>' +
+      '<td class="td-num" style="color:var(--success)">' + fmtNum(d.replied) + '</td>' +
+      '<td class="td-num">' + (f > 0 ? (d.replied / f * 100).toFixed(1) + '%' : '—') + '</td>' +
+      '<td class="td-num" style="color:var(--warning)">' + fmtNum(d.warm) + '</td>' +
+      '<td class="td-num">' + (f > 0 ? (d.warm / f * 100).toFixed(1) + '%' : '—') + '</td>' +
+      '<td class="td-num">' + fmtNum(d.cold) + '</td>' +
+      '<td class="td-num" style="color:var(--muted)">' + fmtNum(d.unfinished) + '</td>' +
+      '</tr>';
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('pipelineTable').innerHTML = html;
+  document.getElementById('pipelineTotals').innerHTML = '';
+  } catch(e) {
+    document.getElementById('pipelineTable').innerHTML = '<p style=\"color:var(--danger)\">Pipeline error: ' + e.message + '</p>';
+    document.getElementById('pipelineTotals').innerHTML = '';
+  }
 }
 
 // ── TAB SWITCHING ──
