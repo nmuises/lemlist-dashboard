@@ -164,11 +164,12 @@ footer { text-align:center; padding:40px 0; color:var(--muted); font-size:0.8rem
 <div class="container">
 <header>
   <h1>Muir AI — Lemlist Performance Dashboard</h1>
-  <p>28 campaigns · 6,024 activities · 1,280 leads · Built 2026-05-06</p>
+  <p id="headerStats">''' + f'{len(model["campaigns"])} campaigns · {model["total_activities"]:,} activities · {model["total_leads"]:,} leads · Last pull: {model["generated_at"][:10]} {model["generated_at"][11:16]} UTC</p>' + '''
 </header>
 
 <div class="card">
   <h2>Overview <span class="badge badge-info">Live</span></h2>
+  <div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px;">Data refreshed: ''' + f'{model["generated_at"][:10]} at {model["generated_at"][11:19]} UTC' + ''' · All numbers computed client-side from raw Lemlist activity data</div>
   <div class="stats-grid" id="overviewStats"></div>
   <div id="overviewInsights"></div>
 </div>
@@ -386,7 +387,7 @@ footer { text-align:center; padding:40px 0; color:var(--muted); font-size:0.8rem
   </div>
 </div>
 
-<footer>Muir AI · Lemlist Performance Dashboard · Built 2026-05-12</footer>
+<footer>Muir AI · Lemlist Performance Dashboard · Data as of ''' + f'{model["generated_at"][:10]} {model["generated_at"][11:19]} UTC' + '''</footer>
 </div>
 ''')
 
